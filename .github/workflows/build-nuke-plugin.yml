@@ -1,0 +1,40 @@
+name: Build PRefToMotion Plugin (Windows)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Unzip Nuke SDK
+        run: |
+          Expand-Archive -Path "Nuke15.2v1-SDK.zip" -DestinationPath "NukeSDK"
+
+      - name: Configure with CMake
+        run: |
+          cmake -B build -S . `
+            -G "Visual Studio 17 2022" `
+            -A x64 `
+            -DNUKE_VERSION=15.2v1 `
+            -DNUKE_INCLUDE_DIR="NukeSDK/include" `
+            -DNUKE_LIB_DIR="NukeSDK/lib" `
+            -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install"
+
+      - name: Build plugin
+        run: cmake --build build --config Release --target INSTALL
+
+      - name: Upload DLL artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: PRefToMotion-Windows
+          path: install/*
