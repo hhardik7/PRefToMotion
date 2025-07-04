@@ -26,8 +26,8 @@ jobs:
             -G "Visual Studio 17 2022" `
             -A x64 `
             -DNUKE_VERSION=15.2v1 `
-            -DNUKE_INCLUDE_DIR="NukeSDK/include" `
-            -DNUKE_LIB_DIR="NukeSDK/lib" `
+            -DNUKE_INCLUDE_DIR="NukeSDK/Nuke15.2v1-SDK/include" `
+            -DNUKE_LIB_DIR="NukeSDK/Nuke15.2v1-SDK/lib" `
             -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install"
 
       - name: Build plugin
